@@ -4,6 +4,32 @@ Using built-in `ast` module to transform your match-case stmts into plain if-els
 
 This lib is only available on python3.10+, because parsing match stmt requires python3.10+. Outputed code's minimal version is unknown, but aiming versions are python3.8 or higher (versions with dataclass).
 
+## How to user
+
+Add "tool.py-babel-match" field to pyproject.toml.
+
+~~~toml
+[tool.py-babel-match]
+glob = ["*.py310.py"]
+~~~
+
+Run command `py-babel-match` in console. Generated file will be shown besides the origin file.
+
+You can also embed transform process into a python file.
+
+~~~python
+from pathlib import Path
+from py_babel_match.config.config import Config
+from py_babel_match.console import main
+main(
+    Config(
+        files=[
+            "test_pattern_matching.py310.py"
+        ],
+    )
+)
+~~~
+
 ## Example
 
 
