@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "py-babel-match"
+version = "0.1.0"
+description = "Transform your match-case stmts into plain if-else stmts that can run on 3.9 or lower python version."
+authors = ["emia"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "py_babel_match"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+tomli = "^2.0.1"
+
+[tool.poetry.scripts]
+py-babel-match = "py_babel_match.console:run"
+
+[tool.poetry.group.dev.dependencies]
+tox = "*"
+pytest = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.py-babel-match]
+glob = ["examples/*.py"]
