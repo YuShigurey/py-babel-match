@@ -4,7 +4,7 @@ Using built-in `ast` module to transform your match-case stmts into plain if-els
 
 This lib is only available on python3.10+, because parsing match stmt requires python3.10+. Outputed code's minimal version is unknown, but aiming versions are python3.8 or higher (versions with dataclass).
 
-## How to user
+## How To Use
 
 Add "tool.py-babel-match" field to pyproject.toml.
 
