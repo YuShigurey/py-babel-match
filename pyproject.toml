@@ -21,7 +21,3 @@ pytest = "*"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-
-[tool.py-babel-match]
-glob = ["examples/*.py"]

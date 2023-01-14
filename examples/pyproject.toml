@@ -1,0 +1,2 @@
+[tool.py-babel-match]
+glob = ["*.py310.py"]

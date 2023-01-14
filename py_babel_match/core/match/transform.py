@@ -7,7 +7,14 @@ from dataclasses import dataclass
 
 
 def todo(a: AST):
-    return NotImplementedError(a, dump(a, indent=4))
+    try:
+        from rich.traceback import install
+
+        install()
+    except ImportError:
+        pass
+    return NotImplementedError(dump(a, indent=4))
+
 
 @dataclass
 class Transformer:
@@ -36,24 +43,37 @@ def recurse_transform(subject, rest_cases):
     case, *rest_cases = rest_cases
     orelse = [recurse_transform(subject, rest_cases)] if rest_cases else []
     match case:
-        case match_case(patt, None, body):
+        case match_case(patt, guard, body):
 
             def deepparse(stmt):
                 subTree = MacthStmtTransformer().visit(stmt)
                 # fix_missing_locations(subTree)
                 return subTree
 
-            return match_pattern0(
+            ret = match_pattern0(
                 subject=subject,
                 orelse=orelse,
                 patt=patt,
                 body=list(map(deepparse, body)),
             )
+            if isinstance(ret, If) and guard is not None:
+                ret.test = BoolOp(
+                    op=And(),
+                    values=[ret.test, guard],
+                )
+                
+            return ret
+
         case _:
             raise todo(case)
 
 
-def match_pattern0(subject, orelse, patt, body):
+def match_pattern0(
+    subject,
+    orelse,
+    patt,
+    body,
+):
     match patt:
         case MatchSingleton(value):
             return If(
@@ -95,13 +115,13 @@ def match_pattern0(subject, orelse, patt, body):
                         subject_value = Subscript(
                             value=Attribute(
                                 value=cls,
-                                attr="__dataclass_fields__",
+                                attr="__match_args__",
                                 ctx=Load(),
                             ),
                             slice=Constant(value=i),
                             ctx=Load(),
                         )
-                        
+
                         # Call(
                         #         Name(id="list", ctx=Load()),
                         #         keywords=[],
@@ -223,7 +243,7 @@ def match_pattern0(subject, orelse, patt, body):
                     raise todo(patt)
 
         case MatchSequence(patterns):
-            
+
             def merge_ifs(ifs: list[If]):
                 return If(
                     test=reduce(
