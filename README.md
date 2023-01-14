@@ -53,5 +53,5 @@ Current `pyproject.toml` finder is rudimentary.
 
 ### Unsupported Use Cases
 
-There are still a lot of unsupported use cases for now.
+There are still a lot of unsupported use cases for now. Detailed list is scheduled after test extablished.
 
